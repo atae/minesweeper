@@ -1,6 +1,6 @@
 require_relative "tile"
 require "colorize"
-
+require 'byebug'
 class Board
   attr_accessor :grid
   DIRECTIONS = [[-1, 0], [-1, 1], [-1, -1], [0, 1], [0, -1], [1, -1], [1, 0], [1, 1]]
@@ -73,13 +73,16 @@ class Board
     return bomb_counter
   end
 
-  def reveal_neighbors(pos)
+  def reveal_neighbors(pos, bomb_counter = 0)
       @grid[pos[0]][pos[1]].reveal
+      @grid[pos[0]][pos[1]].bomb_counter = bomb_counter
       neighbors = neighbors(pos)
-      return if bomb_counter(neighbors) > 0
+      return bomb_counter(neighbors) if bomb_counter(neighbors) > 0
+      #debugger
       neighbors.each do |pos|
-        reveal_neighbors(pos)
+        reveal_neighbors(pos, bomb_counter)
       end
+      return bomb_counter(neighbors)
   end
 
   def render
@@ -88,7 +91,11 @@ class Board
 
       row = row.map do |tile|
        if tile.revealed
-         "   "
+         if tile.bomb_counter == 0
+           "   "
+         else
+           " #{tile.bomb_counter} "
+         end
        elsif tile.flag
          " f ".colorize(:color => :light_blue, :background => :red)
        elsif tile.bomb

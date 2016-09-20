@@ -57,7 +57,7 @@ class MineSweeper
         if @grid[pos].bomb == true
           @grid.reveal
         else
-          @grid.reveal_neighbors(pos)
+          @grid[pos].bomb_counter = @grid.reveal_neighbors(pos)
         end
 
       end
