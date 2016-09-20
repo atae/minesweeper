@@ -87,7 +87,11 @@ class Board
       return bomb_count
   end
 
-  def render
+  def render(system_message = " ")
+    system('clear')
+    if system_message != " "
+      puts system_message
+    end
     puts "   "+(0..8).to_a.map{|num| num.to_s.colorize(:color => :red)}.join("   ")
     @grid.each_with_index do |row, idx|
 
@@ -102,7 +106,7 @@ class Board
          " f ".colorize(:color => :light_blue, :background => :red)
       elsif tile.bomb && tile.revealed
         " * ".colorize(:color => :red, :background => :black)
-       elsif tile.bomb
+      elsif tile.bomb #TODO:replace this with if lost?
          " X ".colorize(:color => :black, :background => :white)
        else
          " * ".colorize(:color => :white, :background => :light_black)
@@ -110,6 +114,7 @@ class Board
      end.join('|')
     puts "#{idx}".colorize(:color => :red)+" " + row
     puts "--------------------------------------"
+
     end
   end
 end

@@ -3,6 +3,7 @@ class MineSweeper
 
   def initialize(grid)
     @grid = grid
+    @system_message = " "
   end
 
 
@@ -14,7 +15,7 @@ class MineSweeper
       get_options(pos)
       neighbors = @grid.neighbors(pos)
 
-      @grid.render
+      @grid.render(@system_message)
     end
   end
 
@@ -56,6 +57,7 @@ class MineSweeper
       if option =~ /[r]/
         if @grid[pos].bomb == true
           @grid[pos].reveal
+          @system_message = "Ouch, that's a mine! You lose babe!".colorize(:color => :black)
         else
           @grid[pos].bomb_counter = @grid.reveal_neighbors(pos)
         end
@@ -64,6 +66,16 @@ class MineSweeper
     end
   end
   def won?
+    @grid.grid.each do |row|
+      row.each do |pos|
+        if (pos.bomb == true && pos.flag == false)
+          return false
+        end
+      end
+    end
+    
+    @system_message =  "You found all of the mines! Congrats babe!".colorize(:color=> :green)
+    true
 
   end
 
@@ -80,7 +92,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.shuffle
-  board.render
+  board.render(@system_message)
   minesweeper = MineSweeper.new(board)
   minesweeper.play
 end
