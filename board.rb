@@ -87,11 +87,8 @@ class Board
       return bomb_count
   end
 
-  def render(system_message = " ")
+  def render(system_message = nil)
     system('clear')
-    if system_message != " "
-      puts system_message
-    end
     puts "   "+(0..8).to_a.map{|num| num.to_s.colorize(:color => :red)}.join("   ")
     @grid.each_with_index do |row, idx|
 

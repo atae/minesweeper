@@ -1,4 +1,5 @@
 require_relative 'board'
+require "byebug"
 class MineSweeper
 
   def initialize(grid)
@@ -17,15 +18,17 @@ class MineSweeper
       get_options(pos)
       neighbors = @grid.neighbors(pos)
 
+      #debugger
       @grid.render(@system_message)
       end
-
+      puts @system_message
       retry_state = retry?
-
+      #byebug
       if retry_state == true
         board = Board.shuffle
         board.render
         minesweeper = MineSweeper.new(board)
+        minesweeper.play
       end
 
     end
@@ -90,10 +93,13 @@ class MineSweeper
       end
     end
   end
+
   def won?
     @grid.grid.each do |row|
       row.each do |pos|
-        if (pos.bomb == true && pos.flag == false)
+        if (pos.revealed == false || !pos.flag)
+          return false
+        elsif (pos.bomb == true && pos.flag == false)
           return false
         end
       end
@@ -117,7 +123,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.shuffle
-  board.render(@system_message)
+  board.render
   minesweeper = MineSweeper.new(board)
   minesweeper.play
 end
