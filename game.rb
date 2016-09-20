@@ -94,15 +94,31 @@ class MineSweeper
     end
   end
 
-  def won?
+
+  def total_flags
+    flags = 0
     @grid.grid.each do |row|
       row.each do |pos|
-        if (pos.revealed == false || !pos.flag)
-          return false
-        elsif (pos.bomb == true && pos.flag == false)
+        if pos.flag
+          flags += 1
+        end
+      end
+    end
+    flags
+  end
+
+  def won?
+
+    @grid.grid.each do |row|
+      row.each do |pos|
+        if (pos.bomb == true && pos.flag == false)
           return false
         end
       end
+    end
+
+    if total_flags != 9
+      return false
     end
 
     @system_message =  "You found all of the mines! Congrats babe!".colorize(:color=> :green)
