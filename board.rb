@@ -77,9 +77,7 @@ class Board
       @grid[pos[0]][pos[1]].reveal
       neighbors = neighbors(pos)
       return if bomb_counter(neighbors) > 0
-      p 'yes'
       neighbors.each do |pos|
-        p "yes"
         reveal_neighbors(pos)
       end
   end
@@ -90,7 +88,7 @@ class Board
 
       row = row.map do |tile|
        if tile.revealed
-         " r "
+         "   "
        elsif tile.flag
          " f ".colorize(:color => :light_blue, :background => :red)
        elsif tile.bomb
