@@ -19,7 +19,11 @@ class MineSweeper
       neighbors = @grid.neighbors(pos)
 
       #debugger
-      @grid.render(@system_message)
+      if lost?
+        @grid.render(@system_message, true)
+      else
+        @grid.render(@system_message)
+      end
       end
       puts @system_message
       retry_state = retry?
