@@ -10,17 +10,42 @@ class MineSweeper
   def play
     puts "Welcome to A.W. Minesweeper!"
     puts "Let's get started. "
-    until game_over?
+    retry_state = true
+    until retry_state == false
+      until game_over?
       pos = get_coordinate
       get_options(pos)
       neighbors = @grid.neighbors(pos)
 
       @grid.render(@system_message)
+      end
+
+      retry_state = retry?
+
+      if retry_state == true
+        board = Board.shuffle
+        board.render
+        minesweeper = MineSweeper.new(board)
+      end
+
     end
+
+    puts 'Bye!'
   end
 
   def game_over?
     return true if won? || lost?
+  end
+
+  def retry?
+    user_input = ''
+    until user_input =~ /y/ || user_input =~ /n/
+      puts "Retry? Y/N"
+      user_input = gets.chomp.downcase
+    end
+
+    return false if user_input =~ /n/
+    return true if user_input =~ /y/
   end
 
   def get_coordinate
@@ -73,7 +98,7 @@ class MineSweeper
         end
       end
     end
-    
+
     @system_message =  "You found all of the mines! Congrats babe!".colorize(:color=> :green)
     true
 
