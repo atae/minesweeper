@@ -73,16 +73,18 @@ class Board
     return bomb_counter
   end
 
-  def reveal_neighbors(pos, bomb_counter = 0)
-      @grid[pos[0]][pos[1]].reveal
-      @grid[pos[0]][pos[1]].bomb_counter = bomb_counter
+  def reveal_neighbors(pos)
       neighbors = neighbors(pos)
-      return bomb_counter(neighbors) if bomb_counter(neighbors) > 0
-      #debugger
+      bomb_count = bomb_counter(neighbors)
+      @grid[pos[0]][pos[1]].reveal
+      @grid[pos[0]][pos[1]].bomb_counter = bomb_count
+
+
+      return bomb_count if bomb_count > 0
       neighbors.each do |pos|
-        reveal_neighbors(pos, bomb_counter)
+        reveal_neighbors(pos) if @grid[pos[0]][pos[1]].bomb_counter == 0
       end
-      return bomb_counter(neighbors)
+      return bomb_count
   end
 
   def render
@@ -90,14 +92,16 @@ class Board
     @grid.each_with_index do |row, idx|
 
       row = row.map do |tile|
-       if tile.revealed
+       if tile.revealed && !tile.bomb
          if tile.bomb_counter == 0
            "   "
          else
            " #{tile.bomb_counter} "
          end
-       elsif tile.flag
+      elsif tile.flag
          " f ".colorize(:color => :light_blue, :background => :red)
+      elsif tile.bomb && tile.revealed
+        " * ".colorize(:color => :red, :background => :black)
        elsif tile.bomb
          " X ".colorize(:color => :black, :background => :white)
        else

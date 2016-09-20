@@ -55,7 +55,7 @@ class MineSweeper
       @grid[pos].flagify if option =~ /[f]/
       if option =~ /[r]/
         if @grid[pos].bomb == true
-          @grid.reveal
+          @grid[pos].reveal
         else
           @grid[pos].bomb_counter = @grid.reveal_neighbors(pos)
         end
